@@ -83,11 +83,11 @@ def getAnalysis(score):
     else:
         return 'Positive'
 
-api_key = 'vXa96GvJl6XciI5Ir1IDukhHY' 
-api_secret = 'V8wBNXIDbDerM7bVIh7Yvn41uMRbX0fu4JBh8fVpZQysjYxJkq'
+api_key = 'your twitter api key' 
+api_secret = 'your twitter api secret key'
 
-access_key = '2547894218-OyHN6mDxAiS9W38cAiXyWCoY8rFr81jY83MZDzA'
-access_secret = 'p1M0yaMKbc5ibHM0m4vQQSCZL0RJhp5grjH2KTyzlZnu0'
+access_key = 'your twitter access key'
+access_secret = 'your twitter access secret key'
 
 bearer_key = 'AAAAAAAAAAAAAAAAAAAAAD%2FRJQEAAAAAS1ePMvntMjtEoDbe%2Fj%2FSCtYB8Ds%3D9skdWCqn9n5Qm3J39XXfDylFt8S9127HiSBIWjeLa46uTydcmS'
 
@@ -96,9 +96,6 @@ auth.set_access_token(access_key, access_secret)
 api = tw.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
 is_finished = False
-
-#while is_finished == False:
-    #get_twitter_data()
 
 dataFrame = pd.read_csv('tweet_data_only.csv')
 dataFrame['Tweet'] = dataFrame['Tweet'].apply(clean_tweet)
