@@ -1,5 +1,4 @@
 from textblob import TextBlob
-from wordcloud import WordCloud
 from tqdm import tqdm 
 from nltk import word_tokenize, FreqDist
 from nltk.corpus import stopwords
@@ -12,10 +11,6 @@ import matplotlib.pyplot as plt
 import preprocessor as p
 import nltk
 import re, time, csv, sys, pickle 
-
-nltk.download
-nltk.download('wordnet')
-nltk.download('stopwords')
 
 def clean_tweet(text):
     text = re.sub(r'@[A-Za-z0-9]+', '', text) #remove mentions
@@ -83,17 +78,16 @@ def getAnalysis(score):
     else:
         return 'Positive'
 
-api_key = 'your twitter api key' 
-api_secret = 'your twitter api secret key'
+API_KEY = 'insert api key here'
+API_SECRET = 'insert secret key here'
 
-access_key = 'your twitter access key'
-access_secret = 'your twitter access secret key'
+ACCESS_KEY = 'insert access key here'
+ACCESS_SECRET = 'insert access key here'
 
-bearer_key = 'AAAAAAAAAAAAAAAAAAAAAD%2FRJQEAAAAAS1ePMvntMjtEoDbe%2Fj%2FSCtYB8Ds%3D9skdWCqn9n5Qm3J39XXfDylFt8S9127HiSBIWjeLa46uTydcmS'
+BEARER_TOKEN = 'insert bearer token here'
 
-auth = tw.OAuthHandler(api_key, api_secret)
-auth.set_access_token(access_key, access_secret)
-api = tw.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+auth = tw.OAuthHandler(API_KEY, API_SECRET, ACCESS_KEY, ACCESS_SECRET)
+api = tw.API(auth)
 
 is_finished = False
 
