@@ -1,16 +1,21 @@
+import re
+import time
+import csv
+import pickle
+import pandas as pd
+import tweepy as tw
+import matplotlib.pyplot as plt
+import preprocessor as p
+
 from textblob import TextBlob
-from tqdm import tqdm 
 from nltk import word_tokenize, FreqDist
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import TweetTokenizer
+from wordcloud import WordCloud
 
-import pandas as pd
-import tweepy as tw 
-import matplotlib.pyplot as plt
-import preprocessor as p
-import nltk
-import re, time, csv, sys, pickle 
+api = None
+dataFrame = pd.DataFrame()
 
 def clean_tweet(text):
     text = re.sub(r'@[A-Za-z0-9]+', '', text) #remove mentions
@@ -23,45 +28,40 @@ def clean_tweet(text):
     return text
 
 def remove_punctuation(words):
- new_words = []
- for word in words:
-    new_word = re.sub(r'[^\w\s]', '', (word))
-    if new_word != '':
-       new_words.append(new_word)
- return new_words
+    new_words = []
+    for word in words:
+        new_word = re.sub(r'[^\w\s]', '', (word))
+        if new_word != '':
+            new_words.append(new_word)
+    return new_words
 
 def get_twitter_data():
-    word_library = ['kill', 'die', 'life', 'hurt', 'suicide', 'sleep', 'tired', 'done', 'save me']
-    data_to_collect = 100
-    since_when = '2020-11-07'
+    word_library = ['kill', 'die', 'life', 'hurt', 'suicide', 'sleep', 'tired', 'done', 'save me', 'help me', 'fuck my life']
+    data_to_collect = 1000
+    since_when = '2024-01-01'
     counter = 0
     tweet_counter = 1
-        
+
     with open('tweet_data_only.csv', 'w') as file:
         tweet_only = csv.writer(file)
         tweet_only.writerow(['Tweet'])
 
-        for tweet in tw.Cursor(api.search, word_library[0], lang='en', since=since_when).items(data_to_collect):
+        for tweet in tw.Cursor(api.search_tweets, word_library[0], lang='en', since=since_when).items(data_to_collect):
             tweet_only.writerow([tweet.text.replace('\n', ' ').encode('utf-8')])
-            #time.sleep(2)
+            time.sleep(2)
             counter += 1
 
             print("Data stored - " + str(tweet_counter))
             tweet_counter += 1
 
-            if tweet_counter == 100:
+            if tweet_counter == 1000:
                 is_finished = True
 
 def remove_randoms():
+    global dataFrame
     dataFrame['Tweet'] = dataFrame['Tweet'].str.replace('b', '')
     dataFrame['Tweet'] = dataFrame['Tweet'].str.replace('xat', '')
     dataFrame['Tweet'] = dataFrame['Tweet'].str.replace('xe2', '')
-    dataFrame['Tweet'] = dataFrame['Tweet'].str.replace('x80', '')
-    dataFrame['Tweet'] = dataFrame['Tweet'].str.replace('x9f', '')
-    dataFrame['Tweet'] = dataFrame['Tweet'].str.replace('xf0', '')
-    dataFrame['Tweet'] = dataFrame['Tweet'].str.replace('x98', '')
-    dataFrame['Tweet'] = dataFrame['Tweet'].str.replace('xa6', '')
-    dataFrame['Tweet'] = dataFrame['Tweet'].str.replace('_', '')
 
 def getSubjectivity(text):
     return TextBlob(text).sentiment.subjectivity
@@ -78,20 +78,20 @@ def getAnalysis(score):
     else:
         return 'Positive'
 
-API_KEY = 'insert api key here'
-API_SECRET = 'insert secret key here'
+API_KEY = '1mvSADxXWmhSInt3lZM54Vrb7'
+API_SECRET = 'sRwNjMHuV2ly0GQ9se1W9Sum1ko0d5l9gXloI8O6qiCBcryCsi'
 
-ACCESS_KEY = 'insert access key here'
-ACCESS_SECRET = 'insert access key here'
+ACCESS_KEY = '2348050974-iZAqAmOJGbwOs9d1VKUbVZrtVDpODshwQdyj4tX'
+ACCESS_SECRET = 'WQxwRxCu6fi43CujfnXL2U2CvhoixYhej3WQ4IrJsbZmS'
 
-BEARER_TOKEN = 'insert bearer token here'
+BEARER_TOKEN = 'AAAAAAAAAAAAAAAAAAAAABkxlgEAAAAAi4M6WU1%2FHtu9Ou1viaWMtNzetw4%3Dsmf9SoFajl54N15vZwF5oiN8PRYv514fTwYaXZeJ0SckfeqjI2'
 
 auth = tw.OAuthHandler(API_KEY, API_SECRET, ACCESS_KEY, ACCESS_SECRET)
 api = tw.API(auth)
 
 is_finished = False
-
-dataFrame = pd.read_csv('tweet_data_only.csv')
+get_twitter_data()
+'''dataFrame = pd.read_csv('tweet_data_only.csv')
 dataFrame['Tweet'] = dataFrame['Tweet'].apply(clean_tweet)
 remove_randoms()
 dataFrame.to_csv('CLEANED_tweet_data_only.csv')
@@ -154,4 +154,4 @@ plt.title('Tweet Sentiment Analysis')
 plt.xlabel('Sentiment')
 plt.ylabel('Counts')
 dataFrame['Analysis'].value_counts().plot(kind = 'bar')
-plt.show()
+plt.show()'''
